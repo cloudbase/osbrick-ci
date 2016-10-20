@@ -40,7 +40,7 @@ echo NET_ID=$NET_ID
 echo ZUUL_UUID=$ZUUL_UUID
 echo JOB_TYPE=$JOB_TYPE
 
-devstack_image="devstack-77v3"
+devstack_image="devstack-78v1"
 
 echo "Image used is: $devstack_image"
 echo "Deploying devstack $NAME"
