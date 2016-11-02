@@ -154,6 +154,10 @@ ExecRetry {
 ExecRetry {
     GitClonePull "$buildDir\networking-hyperv" "https://git.openstack.org/openstack/networking-hyperv.git" $branchName
 }
+ExecRetry {
+    GitClonePull "$buildDir\requirements" "https://git.openstack.org/openstack/requirements.git" $branchName
+}
+Get-ChildItem $buildDir
 
 if ($jobType -eq 'smbfs')
 {
@@ -239,7 +243,9 @@ ExecRetry {
         Get-ChildItem $buildDir\neutron
     }
     pushd $buildDir\neutron
-    & pip install $buildDir\neutron
+    Write-Host "Installing openstack/neutron..."
+    & update-requirements.exe --source $buildDir\requirements .
+    & pip install -c $buildDir\requirements\upper-constraints.txt -U .
     if ($LastExitCode) { Throw "Failed to install neutron from repo" }
     popd
 }
@@ -250,7 +256,13 @@ ExecRetry {
         Get-ChildItem $buildDir\networking-hyperv
     }
     pushd $buildDir\networking-hyperv
-    & pip install $buildDir\networking-hyperv
+    Write-Host "Installing openstack/networking-hyperv..."
+    & update-requirements.exe --source $buildDir\requirements .
+    if (($branchName -eq 'stable/liberty') -or ($branchName -eq 'stable/mitaka')) {
+        & pip install -c $buildDir\requirements\upper-constraints.txt -U .
+    } else {
+        & pip install -e $buildDir\networking-hyperv
+    }
     if ($LastExitCode) { Throw "Failed to install networking-hyperv from repo" }
     popd
 }
@@ -280,8 +292,9 @@ if($jobType -eq 'smbfs')
             cherry_pick 0c13ba732eb5b44e90a062a1783b29f2718f3da8
             cherry_pick 06ee0b259daf13e8c0028a149b3882f1e3373ae1
         }
-
-        & pip install $buildDir\cinder
+        Write-Host "Installing openstack/cinder..."
+        & update-requirements.exe --source $buildDir\requirements .
+        & pip install -c $buildDir\requirements\upper-constraints.txt -U .
         if ($LastExitCode) { Throw "Failed to install cinder from repo" }
         popd
     }
@@ -289,7 +302,9 @@ if($jobType -eq 'smbfs')
 
 ExecRetry {
     pushd $buildDir\os-brick
-    & pip install $buildDir\os-brick
+    Write-Host "Installing openstack/os-brick..."
+    & update-requirements.exe --source $buildDir\requirements .
+    & pip install -c $buildDir\requirements\upper-constraints.txt -U .
     popd
 }
 
@@ -316,7 +331,9 @@ ExecRetry {
         cherry_pick FETCH_HEAD
     }
 
-    & pip install $buildDir\nova
+    Write-Host "Installing openstack/nova..."
+    & update-requirements.exe --source $buildDir\requirements .
+    & pip install -c $buildDir\requirements\upper-constraints.txt -U .
     if ($LastExitCode) { Throw "Failed to install nova fom repo" }
     popd
 }
