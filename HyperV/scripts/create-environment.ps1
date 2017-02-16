@@ -124,6 +124,7 @@ if ($hasBinDir -eq $false){
 }
 
 if (($hasMkisoFs -eq $false) -or ($hasQemuImg -eq $false) -or ($hasOldQemuImg -eq $true)){
+    Cmd /C "rmdir /S /Q $binDir\*"
     Invoke-WebRequest -Uri "http://10.20.1.14:8080/openstack_bin.zip" -OutFile "$bindir\openstack_bin.zip"
     [System.IO.Compression.ZipFile]::ExtractToDirectory("$bindir\openstack_bin.zip", "$bindir")
     Remove-Item -Force "$bindir\openstack_bin.zip"
