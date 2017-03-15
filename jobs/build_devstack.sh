@@ -1,19 +1,18 @@
 #!/bin/bash
-#
 
+basedir=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 # Loading all the needed functions
-source /usr/local/src/osbrick-ci/jobs/library.sh
+source $basedir/library.sh
 
 # Loading parameters
 source /home/jenkins-slave/runs/devstack_params.$ZUUL_UUID.$JOB_TYPE.txt
 
 # Maybe this should not be hardcoded.
-SCRIPTS_DIR="/usr/local/src/osbrick-ci"
 function update_local_conf (){
 
     VALID_JOB_TYPES=("iscsi" "fc" "smbfs")
     if [[ "${VALID_JOB_TYPES[@]}" =~ $JOB_TYPE ]]; then
-        EXTRA_OPTS_PATH="$SCRIPTS_DIR/jobs/$JOB_TYPE/local-conf-extra"
+        EXTRA_OPTS_PATH="$basedir/$JOB_TYPE/local-conf-extra"
     else
         echo "Invalid JOB_TYPE received: ($JOB_TYPE). Expecting $VALID_JOB_TYPES."
         exit 1
