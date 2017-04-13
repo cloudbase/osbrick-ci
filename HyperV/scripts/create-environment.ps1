@@ -339,6 +339,8 @@ ExecRetry {
     popd
 }
 
+pip install oslo.log==3.23.0
+
 # Note: be careful as WMI queries may return only one element, in which case we
 # won't get an array. To make it easier, we can just make sure we always have an
 # array.
