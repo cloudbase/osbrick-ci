@@ -182,7 +182,7 @@ if [ ! -z "$VLAN_RANGE" ]; then
 fi
 set -e
 
-run_ssh_cmd_with_retry ubuntu@$FLOATING_IP $DEVSTACK_SSH_KEY "sed -i 's/export OS_AUTH_URL.*/export OS_AUTH_URL=http:\/\/127.0.0.1:5000\/v2.0\//g' /home/ubuntu/keystonerc" 3
+run_ssh_cmd_with_retry ubuntu@$FLOATING_IP $DEVSTACK_SSH_KEY "sed -i 's/export OS_AUTH_URL.*/export OS_AUTH_URL=http:\/\/127.0.0.1\/identity/g' /home/ubuntu/keystonerc" 3
 
 # Add 1 more interface after successful SSH
 nova interface-attach --net-id "$NET_ID" "$VMID"
