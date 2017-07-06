@@ -333,7 +333,13 @@ ExecRetry {
         Get-ChildItem $buildDir\nova
     }
     pushd $buildDir\nova
-    
+
+    if ($branchName -eq 'master') {
+        # This patch fixes things with InstanceMetadata
+        git fetch git://git.openstack.org/openstack/nova refs/changes/25/479325/1
+        cherry_pick FETCH_HEAD
+    }
+ 
     git fetch git://git.openstack.org/openstack/nova refs/changes/69/467369/2
     cherry_pick FETCH_HEAD
 
